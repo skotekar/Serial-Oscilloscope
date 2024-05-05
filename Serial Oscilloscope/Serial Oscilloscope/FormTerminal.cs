@@ -223,6 +223,30 @@ namespace Serial_Oscilloscope
         }
 
         /// <summary>
+        /// toolStripMenuItemDTREnabled CheckStgateChanged event to toggle the DTR enabled flag on serial port.
+        /// </summary>
+        private void toolStripMenuItemDTREnabled_CheckStateChanged(object sender, EventArgs e)
+        {
+            // Open serial port
+            if (!OpenSerialPort())
+            {
+                RefreshSerialPortList();    // refresh port list if open fails, this also ensures port object is closed
+            }
+        }
+
+        /// <summary>
+        /// toolStripMenuItemRTSEnabled CheckStgateChanged event to toggle the RTS enabled flag on serial port.
+        /// </summary>
+        private void toolStripMenuItemRTSEnabled_CheckStateChanged(object sender, EventArgs e)
+        {
+            // Open serial port
+            if (!OpenSerialPort())
+            {
+                RefreshSerialPortList();    // refresh port list if open fails, this also ensures port object is closed
+            }
+        }
+
+        /// <summary>
         /// toolStripMenuItemEnabled CheckStateChanged event to toggle enabled state of the terminal text box.
         /// </summary>
         private void toolStripMenuItemEnabled_CheckStateChanged(object sender, EventArgs e)
@@ -407,6 +431,8 @@ namespace Serial_Oscilloscope
             try
             {
                 serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
+                serialPort.DtrEnable = toolStripMenuItemDTREnabled.Checked;
+                serialPort.RtsEnable = toolStripMenuItemRTSEnabled.Checked;
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
                 serialPort.Open();
                 this.Text = Assembly.GetExecutingAssembly().GetName().Name + " (" + portName + ", " + baudRate.ToString() + ")";
